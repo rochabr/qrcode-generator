@@ -21,24 +21,17 @@ namespace Microsoft.Samples
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string url = req.Query["url"];
+            string reqData = req.Query["ReqData"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            url = url ?? data?.url;
-            if (string.IsNullOrEmpty(url))
-            {
-                return new BadRequestResult();
-            }
-            var isAbsoluteUrl = Uri.TryCreate(url, UriKind.Absolute, out Uri resultUrl);
-            if (!isAbsoluteUrl)
+            reqData = reqData ?? data?.url;
+            if (string.IsNullOrEmpty(reqData))
             {
                 return new BadRequestResult();
             }
 
-            var generator = new Url(resultUrl.AbsoluteUri);
-            var payload = generator.ToString();
-
+            var payload = reqData.ToString();
             using (var qrGenerator = new QRCoder.QRCodeGenerator())
             {
                 var qrCodeData = qrGenerator.CreateQrCode(payload, QRCoder.QRCodeGenerator.ECCLevel.Q);
