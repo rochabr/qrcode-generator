@@ -1,0 +1,100 @@
+<!DOCTYPE html>    
+<html>    
+  <head>    
+    <title>QR Code Generator</title>    
+    <style>    
+      body {    
+        font-family: Arial, sans-serif;    
+        font-size: 16px;    
+        margin: 0;    
+        padding: 0;    
+        background-color: #f2f2f2;    
+      }    
+    
+      .container {    
+        max-width: 800px;    
+        margin: 0 auto;    
+        padding: 20px;    
+        background-color: #fff;    
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);    
+      }    
+    
+      h1 {    
+        text-align: center;    
+        margin-top: 0;    
+      }    
+    
+      img {    
+        max-width: 100%;    
+      }    
+    
+      button {    
+        display: inline-block;    
+        padding: 10px 20px;    
+        margin: 10px;    
+        background-color: #007bff;    
+        color: #fff;    
+        border: none;    
+        border-radius: 5px;    
+        font-size: 16px;    
+        cursor: pointer;    
+      }    
+    
+      button:hover {    
+        background-color: #0066cc;    
+      }    
+  
+      .hidden {  
+        display: none;  
+      }  
+    </style>    
+  </head>      
+  <body>    
+    <div class="container">    
+      <h1>QR Code Generator</h1>    
+      <form>    
+        <label for="content">Content:</label>    
+        <input type="text" id="content" name="content">    
+        <button type="button" onclick="generateQRCode()">Generate QR Code</button>    
+      </form>    
+      <div id="qrcode"></div>    
+      <div id="buttons" class="hidden">  
+        <button type="button" onclick="printQRCode()">Print</button>  
+        <button type="button" onclick="saveQRCode()">Save</button>  
+      </div>  
+    </div>    
+    <script>    
+      async function generateQRCode() {    
+        var content = document.getElementById("content").value;    
+        var url = "<AZURE_FUNCTION_PATH>/api/QRCodeGenerator?ReqData=" + encodeURIComponent(content);  
+        document.getElementById("qrcode").innerHTML = "<img src=" + url + ">";    
+        document.getElementById("buttons").classList.remove("hidden");  
+      }    
+  
+      function printQRCode() {  
+        var qrcode = document.getElementById("qrcode").innerHTML;  
+        var printWindow = window.open('', 'Print', 'height=600,width=800');  
+        printWindow.document.write('<html><head><title>Print</title>');  
+        printWindow.document.write('</head><body >');  
+        printWindow.document.write(qrcode);  
+        printWindow.document.write('</body></html>');  
+        printWindow.document.close();  
+
+        setTimeout(() => { printWindow.print(); }, 1000);  
+      }  
+  
+      function saveQRCode() {  
+        var qrcode = document.querySelector("#qrcode img");  
+        var canvas = document.createElement('canvas');  
+        canvas.width = qrcode.width;  
+        canvas.height = qrcode.height;  
+        var ctx = canvas.getContext('2d');  
+        ctx.drawImage(qrcode, 0, 0, qrcode.width, qrcode.height);  
+        var link = document.createElement('a');  
+        link.download = 'qrcode.png';  
+        link.href = canvas.toDataURL();  
+        link.click();  
+      }  
+    </script>    
+  </body>    
+</html>    
