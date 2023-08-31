@@ -66,7 +66,7 @@
     <script>    
       async function generateQRCode() {    
         var content = document.getElementById("content").value;    
-        var url = "<AZURE_FUNCTION_PATH>/api/QRCodeGenerator?ReqData=" + encodeURIComponent(content);  
+        var url = "http://localhost:7071/api/QRCodeGenerator?content=" + encodeURIComponent(content);  
         document.getElementById("qrcode").innerHTML = "<img src=" + url + ">";    
         document.getElementById("buttons").classList.remove("hidden");  
       }    
