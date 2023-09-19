@@ -62,12 +62,14 @@
         <button type="button" onclick="printQRCode()">Print</button>  
         <button type="button" onclick="saveQRCode()">Save</button>  
       </div>  
-    </div>    
+    </div>   
+        
     <script>    
+
       async function generateQRCode() {    
         var content = document.getElementById("content").value;    
-        var url = "http://localhost:7071/api/QRCodeGenerator?content=" + encodeURIComponent(content);  
-        document.getElementById("qrcode").innerHTML = "<img src=" + url + ">";    
+        var url = "<API_URL>/api/QRCodeGenerator?content=" + encodeURIComponent(content);  
+        document.getElementById("qrcode").innerHTML = '<img src="' + url + '" download="qrcode.png">';    
         document.getElementById("buttons").classList.remove("hidden");  
       }    
   
@@ -83,18 +85,25 @@
         setTimeout(() => { printWindow.print(); }, 1000);  
       }  
   
-      function saveQRCode() {  
-        var qrcode = document.querySelector("#qrcode img");  
-        var canvas = document.createElement('canvas');  
-        canvas.width = qrcode.width;  
-        canvas.height = qrcode.height;  
-        var ctx = canvas.getContext('2d');  
-        ctx.drawImage(qrcode, 0, 0, qrcode.width, qrcode.height);  
-        var link = document.createElement('a');  
-        link.download = 'qrcode.png';  
-        link.href = canvas.toDataURL();  
-        link.click();  
-      }  
-    </script>    
+      function saveQRCode() {
+        
+        
+        let img = document.querySelector('img');
+        let imagePath = img.getAttribute('src') + ' download="qrcode.png"';
+        
+        var a = document.createElement('a');
+        a.href = imagePath;
+
+        a.click();
+
+        // let fileName = getFileName(imagePath);
+        // saveAs(imagePath, fileName);
+    }
+
+      function getFileName(str) {
+          return str.substring(str.lastIndexOf('/') + 1)
+      }
+    </script>   
+    <script src="FileSaver.js"></script> 
   </body>    
 </html>    

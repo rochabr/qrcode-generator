@@ -15,7 +15,7 @@ namespace Microsoft.Samples
     {
         [FunctionName("QRCodeGenerator")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -35,7 +35,7 @@ namespace Microsoft.Samples
             {
                 var qrCodeData = qrGenerator.CreateQrCode(payload, QRCoder.QRCodeGenerator.ECCLevel.Q);
                 var qrCode = new BitmapByteQRCode(qrCodeData);
-                var qrCodeAsPng = qrCode.GetGraphic(15, "#FFFFFF", "#EF4135");
+                var qrCodeAsPng = qrCode.GetGraphic(15, "#FFFFFF", "#005292");
                 return new FileContentResult(qrCodeAsPng, "image/png");
             }
         }
